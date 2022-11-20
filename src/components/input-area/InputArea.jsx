@@ -18,7 +18,7 @@ const InputArea = () => {
 
     const handleChange = (e) => {
         const {name, value} = e.target
-        dispatch(createAction(ACTIONS_TYPES.INPUT_TITLE_CHANGE, { inputType: name, value: value }))
+        dispatch(createAction(ACTIONS_TYPES.INPUT_HANDLE_CHANGE, { inputType: name, value: value }))
     }
     
     const addTodo = async () => {
@@ -55,7 +55,7 @@ const InputArea = () => {
             .map(file => file.file && file.file.name)
             .forEach(file => deleteFile(file))
     }
-    //a 
+    
     const onEnterDown = (e) => e.code === "Enter" && addTodo()
 
     return <div className="input-todo">

@@ -16,7 +16,7 @@ const todosReducer = (state = INITIAL_STATE, action) => {
     const { todos } = state
     const { type, payload } = action
     switch (type) {
-        case ACTIONS_TYPES.INPUT_TITLE_CHANGE:
+        case ACTIONS_TYPES.INPUT_HANDLE_CHANGE:
             return {
                 ...state,
                 [payload.inputType]: payload.value,
