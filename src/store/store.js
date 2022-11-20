@@ -7,6 +7,7 @@ import { ACTIONS_TYPES } from './action-types'
 const INITIAL_STATE = {
     title: "",
     text: "",
+    file: null,
     editingTodoId: null,
     editMode: null,
     todos: []
@@ -19,12 +20,18 @@ const todosReducer = (state = INITIAL_STATE, action) => {
         case ACTIONS_TYPES.INPUT_HANDLE_CHANGE:
             return {
                 ...state,
-                [payload.inputType]: payload.value,
+                [payload.name]: payload.value,
+            }
+        case ACTIONS_TYPES.DELETE_FILE_LINK:
+            return {
+                ...state,
+                file: null
             }
         case ACTIONS_TYPES.EDITITING_TODO_ID:
             return {
                 ...state,
                 editingTodoId: payload.id,
+                file: payload.file,
                 editMode: true,
                 title: payload.title,
                 text: payload.text
@@ -54,7 +61,7 @@ const todosReducer = (state = INITIAL_STATE, action) => {
         case ACTIONS_TYPES.UPDATE_TODO:
             return {
                 ...state,
-                todos: todos.map(el => el.id === payload.id ? { ...el, title: payload.title, text: payload.text } : el),
+                todos: todos.map(el => el.id === payload.id ? { ...el, title: payload.title, text: payload.text, file: payload.file } : el),
                 editMode: false,
                 title: "",
                 text: ""

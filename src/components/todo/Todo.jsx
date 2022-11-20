@@ -12,12 +12,12 @@ const Todo = ({ el }) => {
 
     const dispatch = useDispatch()
 
-    const editTodo = (id) => {
-        dispatch(createAction(ACTIONS_TYPES.EDITITING_TODO_ID, { id: id, title, text }))
+    const editTodo = () => {
+        dispatch(createAction(ACTIONS_TYPES.EDITITING_TODO_ID, { id, title, text, file }))
     }
-    
-    const deleteTodo = (id) => {
-        dispatch(createAction(ACTIONS_TYPES.DELETE_TODO, { id: id }))
+
+    const deleteTodo = () => {
+        dispatch(createAction(ACTIONS_TYPES.DELETE_TODO, { id }))
         file && deleteFile(file.name)
     }
 
@@ -52,8 +52,8 @@ const Todo = ({ el }) => {
         <div>
             {file ? <a href={file.url} download><img src="https://img.icons8.com/fluency-systems-filled/37/ffe89d/new-by-copy.png" alt="file" /></a> : null}
             <p>{file && file.name}</p>
-            <button onClick={() => editTodo(id, text)}>Edit</button>
-            <button onClick={() => deleteTodo(id)}>Delete</button>
+            <button onClick={editTodo}>Edit</button>
+            <button onClick={deleteTodo}>Delete</button>
         </div>
     </div>
 }

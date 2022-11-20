@@ -10,52 +10,68 @@ import './InputArea.scss'
 
 const InputArea = () => {
     const fileRef = useRef(null)
-    
-    const [file, setFile] = useState(null)
-    
+
+    const [fileObj, setFileObj] = useState(null)
+
     const dispatch = useDispatch()
-    const { todos, title, text, editingTodoId, editMode } = useSelector(state => state)
+    const { todos, title, text, file, editingTodoId, editMode } = useSelector(state => state)
 
     const handleChange = (e) => {
-        const {name, value} = e.target
-        dispatch(createAction(ACTIONS_TYPES.INPUT_HANDLE_CHANGE, { inputType: name, value: value }))
+        const { name, value } = e.target
+        dispatch(createAction(ACTIONS_TYPES.INPUT_HANDLE_CHANGE, { name, value }))
     }
-    
+
     const addTodo = async () => {
         if (title === "") return
         if (text === "") return
 
-        const url = file && await uploadFileAndGetUrl(file.name, file)
+        const url = fileObj && await uploadFileAndGetUrl(fileObj.name, fileObj)
 
         dispatch(createAction(
             ACTIONS_TYPES.ADD_TODO,
             {
                 id: Math.random(),
-                title: title,
-                text: text,
+                title,
+                text,
                 completed: false,
                 finishedDate: "",
-                file: file && {
-                    url: url,
-                    name: file.name
+                file: fileObj && {
+                    url,
+                    name: fileObj.name
                 }
             }
         ))
         fileRef.current.value = ""
-        setFile(null)
+        setFileObj(null)
     }
 
-    const updateTodo = () => {
-        dispatch(createAction(ACTIONS_TYPES.UPDATE_TODO, { id: editingTodoId, title: title, text: text }))
+    const updateTodo = async () => {
+        const url = fileObj && await uploadFileAndGetUrl(fileObj.name, fileObj)
+        dispatch(createAction(
+            ACTIONS_TYPES.UPDATE_TODO,
+            {
+                id: editingTodoId,
+                title,
+                text,
+                file: fileObj && {
+                    url,
+                    name: fileObj.name
+                }
+            }))
+    }
+
+    const deletefile = () => {
+        dispatch(createAction(ACTIONS_TYPES.DELETE_FILE_LINK))
+        file && deleteFile(file.name)
     }
 
     const clearCompleted = () => {
         dispatch(createAction(ACTIONS_TYPES.CLEAR_COMPLETED))
-        todos.filter(file => file.completed)
-            .map(file => file.file && file.file.name)
+        todos.filter(todo => todo.completed)
+            .map(todo => todo.file && todo.file.name)
             .forEach(file => deleteFile(file))
     }
-    
+
     const onEnterDown = (e) => e.code === "Enter" && addTodo()
 
     return <div className="input-todo">
@@ -67,13 +83,26 @@ const InputArea = () => {
             <div>
                 <p>{todos.filter(({ completed }) => completed === true).length}/{todos.length}</p>
                 {editMode
-                    ? <button onClick={updateTodo}>Update</button>
+                    ? <>
+                        <button onClick={updateTodo}>Update</button>
+                        {!file && <>
+                            <input className="file" ref={fileRef} type="file" onChange={(e) => setFileObj(e.target.files[0])} />
+                        </>
+                        }
+                        <div>
+                            {file && <>
+                                <a href={file.url} download><img src="https://img.icons8.com/fluency-systems-filled/37/ffe89d/new-by-copy.png" alt="file" /></a>
+                                <p onClick={deletefile}>Delete</p>
+                            </>
+                            }
+                        </div>
+                    </>
                     : <>
                         <button onClick={addTodo}>Add</button>
                         <button onClick={clearCompleted}>Clear Completed</button>
                     </>}
             </div>
-            {!editMode && <input className="file" ref={fileRef} type="file" onChange={(e) => setFile(e.target.files[0])} />}
+            {!editMode && <input className="file" ref={fileRef} type="file" onChange={(e) => setFileObj(e.target.files[0])} />}
         </div>
     </div>
 }
