@@ -1,0 +1,24 @@
+.todos {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 15px 20%;
+    color: #ffe89d;
+
+    h1 {
+        width: fit-content;
+        background-color: #9c812870;
+        padding: 10px 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        backdrop-filter: blur(3px);
+    }
+
+    button {
+        cursor: pointer;
+        transition: .3s;
+    }
+}

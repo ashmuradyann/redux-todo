@@ -1,0 +1,12 @@
+.todos-list {
+  width: 100%;
+  padding: 20px 0;
+
+  h2 {
+    width: fit-content;
+    background-color: #9c812870;
+    padding: 10px 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(3px);
+  }
+}
